@@ -19,6 +19,8 @@ Throws an error if the addon has already been registered.
 #### _Config_ gConfig.get(_string_ addonName)
 Returns a _Config_ object from the gConfig system. The addon doesn't have to be registered yet.
 
+gConfig.register and gConfig.get are split up in order to detect addon collisions.
+
 #### _void_ gConfig.addType(_string_ typeName, _function_ match(_any_ value), _function_ gui(?), _function_ serialize(_any_ value), _function_ unserialize(_string_ value))
 Adds a new type to the gConfig system. (Use a struct instead of a bunch of parameters?)
 * **match** should return a _boolean_ wether this value is permitted
