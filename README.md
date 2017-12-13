@@ -10,8 +10,7 @@ Registers an addon to the gConfig system, returns a _Config_ object.
 Throws an error if the addon has already been registered.
 
 #### _Config_ gConfig.get(_string_ addonName)
-Returns a registered _Config_ object from the gConfig system.
-Throws an error if the addon hasn't been registered.
+Returns a _Config_ object from the gConfig system. The addon doesn't have to be registered yet.
 
 ### Config class
 ------
