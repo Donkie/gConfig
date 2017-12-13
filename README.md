@@ -1,6 +1,16 @@
 ![](http://f.donkie.co/qSEEF)
 
-A configuration library for Garrysmod addons
+A configuration library for Garry's Mod addons.
+
+* Supports MySQL, built-in Gmod database, and textfile based storage.
+* Supports multiple servers sharing same config, automatically updates when changes are detected.
+* Has an intuitive and feature rich GUI.
+* Supports both server and client variables. Can be used to configurate your gamemode as well as letting your players config their HUD!
+* Designed to be as easy as possible for addon creators to implement.
+* Allows addon creators to change/remove/add new configuration items without conflicts or loss of data.
+* It stores a full history of all configuration values, with who edited it, and possibility to revert to old values.
+
+**This is only a draft / idea so far and nothing of use has yet been made. This is intended to be a community effort since it's made for addon creators. Feel free to discuss ideas and create pull requests.**
 
 # For Server Owners
 Install this addon to your addons directory, then follow the instructions in `lua/gconfig.lua`
