@@ -40,3 +40,16 @@ string | description | A pretty description
 string | type | The value type
 table | typeOptions | [optional] A list of options for the chosen type
 any | default | [optional] The default value
+bool | mapUnique | [optional] Is this items value based on the current map
+
+### Built-in Types
+------
+#### Basic
+Type | Name | Options | Description
+--- | --- | --- | ---
+string | String | <ul><li>_integer_ minlen - Minimum length</li><li>_integer_ maxlen - Maximum length</li><li>_string_ regex - Must match this regex</li></ul> | A one-line string
+string | Text | <ul><li>_integer_ minlen - Minimum length</li><li>_integer_ maxlen - Maximum length</li><li>_string_ regex - Must match this regex</li></ul> | A multiline string
+number | Integer | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li></ul> | A non-integer number
+number | Number | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li><li>_integer_ precision - Number of decimal places</li></ul> | An integer number
+any | Enum | <ul><li>_table_ data - A sequential array of allowed values</li><li>_bool_ allowEmpty - Allows the user to select an empty list item</li></ul> | Any value in the supplied list
+vector | Position | | A world position
