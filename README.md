@@ -30,21 +30,20 @@ Calls the supplied onChange function if the value of the config item with this i
 
 ### ConfigStruct
 ------
-Type | Name | Description
---- | --- | ---
-string | id | The unique identifier
-enum | realm | Must be any of `gConfig.Server / gConfig.Shared / gConfig.Client`. A server/shared item can only be edited by authorized players. Only shared/client items are visible to the clientside. All realm types are visible to the serverside. All items are stored on the server/db, never on the clients machine. Client items are unique to each player.
-enum | access | Must be any of `gConfig.User / gConfig.Admin / gConfig.SuperAdmin / gConfig.None`. The default access level. Only applicable to server/shared items. Setting to None means nobody has access to this by default.
-string | name | A pretty name
+Type   | Name        | Description
+---    | ---         | ---
+string | id          | The unique identifier
+enum   | realm       | Must be any of `gConfig.Server / gConfig.Shared / gConfig.Client`. A server/shared item can only be edited by authorized players. Only shared/client items are visible to the clientside. All realm types are visible to the serverside. All items are stored on the server/db, never on the clients machine. Client items are unique to each player.
+enum   | access      | Must be any of `gConfig.User / gConfig.Admin / gConfig.SuperAdmin / gConfig.None`. The default access level. Only applicable to server/shared items. Setting to None means nobody has access to this by default.
+string | name        | A pretty name
 string | description | A pretty description
-string | type | The value type
-table | typeOptions | [optional] A list of options for the chosen type
-any | default | [optional] The default value
-bool | mapUnique | [optional] Is this items value based on the current map
+string | type        | The value type
+table  | typeOptions | [optional] A list of options for the chosen type
+any    | default     | [optional] The default value
+bool   | mapUnique   | [optional] Is this items value based on the current map
 
 ### Built-in Types
 ------
-#### Basic
 Type         | Name     | Options                                                                                                                                                   | Description
 ---          | ---      | ---                                                                                                                                                       | ---
 string       | String   | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ regex - Must match this regex</li></ul>                    | A one-line string
@@ -56,3 +55,6 @@ color struct | Color    | <ul><li>_bool_ alphaChannel - Enables alpha channel pi
 vector       | Position |                                                                                                                                                           | A world position
 string       | Model    | <ul><li>_bool_ playerModel - Only allow models which are valid player models</li><li>_bool_ physics - Only allow models with valid physicmodels</li></ul> | A model path
 string       | Sound    | <ul><li>_bool_ disallowMP3 - Disallow MP3 files</li><li>_bool_ disallowWAV - Disallow WAV files</li></ul>                                                 | A sound path
+number       | Team     |                                                                                                                                                           | A team defined with the team. system (includes DarkRP teams)
+function     | Function | ?                                                                                                                                                         | A piece of lua code for advanced configuration needs. Going to use RunString with a wrapper function, perhaps debug functions to sandbox it.
+table        | List     | <ul><li>_string_ type - The item type</li><li>_table_ typeOptions - A list of options</li><li>_integer_ maxItems - Maximum number of items</li></ul>      | A list of items of the chosen type. Returns a sequential array of the data. Supports nested lists.
