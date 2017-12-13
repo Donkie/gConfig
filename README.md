@@ -49,6 +49,8 @@ enum   | access      | Must be any of `gConfig.User / gConfig.Admin / gConfig.Su
 string | name        | A pretty name
 string | description | A pretty description
 string | type        | The value type
+number | lastChange  | [optional] When this config item was added/last changed. Used to warn about outdated config values. A UNIX timestamp.
+string | category    | [optional] A category
 table  | typeOptions | [optional] A list of options for the chosen type
 any    | default     | [optional] The default value
 bool   | mapUnique   | [optional] Is this items value based on the current map
