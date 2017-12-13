@@ -45,11 +45,14 @@ bool | mapUnique | [optional] Is this items value based on the current map
 ### Built-in Types
 ------
 #### Basic
-Type | Name | Options | Description
---- | --- | --- | ---
-string | String | <ul><li>_integer_ minlen - Minimum length</li><li>_integer_ maxlen - Maximum length</li><li>_string_ regex - Must match this regex</li></ul> | A one-line string
-string | Text | <ul><li>_integer_ minlen - Minimum length</li><li>_integer_ maxlen - Maximum length</li><li>_string_ regex - Must match this regex</li></ul> | A multiline string
-number | Integer | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li></ul> | A non-integer number
-number | Number | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li><li>_integer_ precision - Number of decimal places</li></ul> | An integer number
-any | Enum | <ul><li>_table_ data - A sequential array of allowed values</li><li>_bool_ allowEmpty - Allows the user to select an empty list item</li></ul> | Any value in the supplied list
-vector | Position | | A world position
+Type         | Name     | Options                                                                                                                                                   | Description
+---          | ---      | ---                                                                                                                                                       | ---
+string       | String   | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ regex - Must match this regex</li></ul>                    | A one-line string
+string       | Text     | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ regex - Must match this regex</li></ul>                    | A multiline string
+number       | Integer  | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li></ul>                                                                     | A non-integer number
+number       | Number   | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li><li>_integer_ precision - Number of decimal places</li></ul>              | An integer number
+any          | Enum     | <ul><li>_table_ data - A sequential array of allowed values</li><li>_bool_ allowEmpty - Allows the user to select an empty list item</li></ul>            | Any value in the supplied list
+color struct | Color    | <ul><li>_bool_ alphaChannel - Enables alpha channel picking</li></ul>                                                                                     | A color
+vector       | Position |                                                                                                                                                           | A world position
+string       | Model    | <ul><li>_bool_ playerModel - Only allow models which are valid player models</li><li>_bool_ physics - Only allow models with valid physicmodels</li></ul> | A model path
+string       | Sound    | <ul><li>_bool_ disallowMP3 - Disallow MP3 files</li><li>_bool_ disallowWAV - Disallow WAV files</li></ul>                                                 | A sound path
