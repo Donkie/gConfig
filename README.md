@@ -1,7 +1,11 @@
-# gConfig
+![](http://f.donkie.co/qSEEF)
+
 A configuration library for Garrysmod addons
 
-## Proposed library interface
+## Usage
+The config for your addon should be placed in a lua file in the `lua/gconfig/` directory of your addon with a unique name.
+
+## Library interface
 _`<return type> <function name>(<(argument type) argument>)`_
 ### gConfig namespace
 ------
