@@ -2,7 +2,10 @@
 
 A configuration library for Garrysmod addons
 
-## Usage
+# For Server Owners
+Install this addon to your addons directory, then follow the instructions in `lua/gconfig.lua`
+
+# For Developers
 The config for your addon should be placed in a lua file in the `lua/gconfig/` directory of your addon with a unique name.
 
 ## Library interface
@@ -16,14 +19,22 @@ Throws an error if the addon has already been registered.
 #### _Config_ gConfig.get(_string_ addonName)
 Returns a _Config_ object from the gConfig system. The addon doesn't have to be registered yet.
 
+#### _void_ gConfig.addType(_string_ typeName, _function_ match(_any_ value), _function_ gui(?), _function_ serialize(_any_ value), _function_ unserialize(_string_ value))
+Adds a new type to the gConfig system. (Use a struct instead of a bunch of parameters?)
+* **match** should return a _boolean_ wether this value is permitted
+* **gui** is called whenever the picker for this needs to be created
+* **serialize** is called to serialize the value, return a _string_
+* **unserialize** is called to unserialize the value, return _any_
+
 ### Config class
 ------
 #### _void_ Config:add(_ConfigStruct_ variables)
 Adds a config item to the addons config. See _ConfigStruct_ for the parameters.
 Throws an error if an item with this id has already been added.
 
-#### _any_ Config:get(_string_ id)
+#### _any_ Config:get(_string_ id, _vararg_ ...)
 Returns the value of the config item with this id. If none has been set, returns the default. If default hasn't been set, returns _nil_.
+If the config item is of type Function, it will call the function with the vararg parameters.
 
 #### _void_ Config:monitor(_string_ id, _function_ onChange(_string_ id, _any_ oldValue, _any_ newValue))
 Calls the supplied onChange function if the value of the config item with this id changes.
