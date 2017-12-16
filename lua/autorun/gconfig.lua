@@ -16,20 +16,20 @@ function gConfig.msg(text, clr)
 	MsgC(realmClr, realmStr, gConfig.colors.main, "[gConfig] ", clr, text, "\n")
 end
 
-function gConfig.msgInfo(text)
-	gConfig.msg(text, gConfig.colors.info)
+function gConfig.msgInfo(text, ...)
+	gConfig.msg(text:format(...), gConfig.colors.info)
 end
 
-function gConfig.msgSuccess(text)
-	gConfig.msg(text, gConfig.colors.success)
+function gConfig.msgSuccess(text, ...)
+	gConfig.msg(text:format(...), gConfig.colors.success)
 end
 
-function gConfig.msgWarning(text)
-	gConfig.msg(text, gConfig.colors.warning)
+function gConfig.msgWarning(text, ...)
+	gConfig.msg(text:format(...), gConfig.colors.warning)
 end
 
-function gConfig.msgError(text)
-	gConfig.msg(text, gConfig.colors.error)
+function gConfig.msgError(text, ...)
+	gConfig.msg(text:format(...), gConfig.colors.error)
 end
 
 gConfig.msgInfo("Initializing")

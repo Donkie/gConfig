@@ -16,18 +16,18 @@ local function loadFolder(dir)
 			end
 
 			if issh or issv then
-				gConfig.msgInfo(string.format("Loading %s", fullpath))
+				gConfig.msgInfo("Loading %s", fullpath)
 				include(fullpath)
 			end
 		else
 			if iscl or issh then
-				gConfig.msgInfo(string.format("Loading %s", fullpath))
+				gConfig.msgInfo("Loading %s", fullpath)
 				include(fullpath)
 			end
 		end
 
 		if not iscl and not issh and not issv then
-			gConfig.msgWarning(string.format("Ignored %s", fullpath))
+			gConfig.msgWarning("Ignored %s", fullpath)
 		end
 	end
 end
