@@ -70,6 +70,7 @@ bool   | mapUnique   | [optional] Is this items value based on the current map
 ------
 Type | Name | Options | Description
 --- | --- | --- | ---
+bool | Boolean | | A boolean (true/false)
 string | String | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ pattern - Must match this pattern</li></ul> | A one-line string
 string | Text | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ pattern - Must match this pattern</li></ul> | A multiline string
 number | Integer | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li></ul> | An integer number
