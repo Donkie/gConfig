@@ -1,5 +1,5 @@
 
-local function loadFolder(dir)
+function gConfig.loadFolder(dir)
 	local files, _ = file.Find(dir .. "/*.lua", "LUA")
 	for _, f in pairs(files) do
 		if f == "loader.lua" then continue end
@@ -32,5 +32,5 @@ local function loadFolder(dir)
 	end
 end
 
-loadFolder("libgconfig")
-loadFolder("gconfig")
+gConfig.loadFolder("libgconfig")
+gConfig.loadFolder("gconfig")

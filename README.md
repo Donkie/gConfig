@@ -55,7 +55,7 @@ Calls the supplied onChange function if the value of the config item with this i
 Type   | Name        | Description
 ---    | ---         | ---
 string | id          | The unique identifier
-enum   | realm       | Must be any of `gConfig.Server / gConfig.Shared / gConfig.Client`. A server/shared item can only be edited by authorized players. Only shared/client items are visible to the clientside. All realm types are visible to the serverside. All items are stored on the server/db, never on the clients machine. Client items are unique to each player.
+enum   | realm       | Must be any of `gConfig.Server / gConfig.Shared / gConfig.Client`. A server/shared item can only be edited by authorized players. Only shared/client items are visible to the clientside. Server/shared item types are visible to the serverside. Server/shared items are stored on the server/db. Client items are unique to each player, they are stored on the clients machine.
 enum   | access      | Must be any of `gConfig.User / gConfig.Admin / gConfig.SuperAdmin / gConfig.None`. The default access level. Only applicable to server/shared items. Setting to None means nobody has access to this by default.
 string | name        | A pretty name
 string | description | A pretty description
