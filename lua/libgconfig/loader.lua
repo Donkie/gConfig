@@ -1,11 +1,11 @@
 
-function gConfig.loadFolder(dir)
+function gConfig.loadFolder(dir, forceShared)
 	local files, _ = file.Find(dir .. "/*.lua", "LUA")
 	for _, f in pairs(files) do
 		if f == "loader.lua" then continue end
 
 		local iscl = f:match("^cl_") != nil
-		local issh = f:match("^sh_") != nil
+		local issh = f:match("^sh_") != nil or forceShared
 		local issv = f:match("^sv_") != nil
 
 		local fullpath = string.format("%s/%s", dir, f)
@@ -33,4 +33,4 @@ function gConfig.loadFolder(dir)
 end
 
 gConfig.loadFolder("libgconfig")
-gConfig.loadFolder("gconfig")
+gConfig.loadFolder("gconfig", true)
