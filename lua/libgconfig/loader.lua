@@ -12,7 +12,7 @@ function gConfig.loadFolder(dir)
 
 		if SERVER then
 			if iscl or issh then
-				AddCSLuaFile(filepath)
+				AddCSLuaFile(fullpath)
 			end
 
 			if issh or issv then
