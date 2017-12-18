@@ -21,7 +21,7 @@ function gConfig.isValidType(typeName)
 end
 
 local function genericStringMatch(value, options)
-	assert(isstring(value), "Type \"String\" must be a string")
+	assert(isstring(value), "Type \"String\" must be a string, got " .. type(value))
 
 	local len = utf8.len(value)
 	if not len then return false end -- Contained invalid UTF-8 sequence
@@ -34,7 +34,7 @@ end
 
 gConfig.addType("Boolean",
 function(value, options)
-	assert(isbool(value), "Type \"Boolean\" must be a boolean")
+	assert(isbool(value), "Type \"Boolean\" must be a boolean, got " .. type(value))
 
 	return true
 end, function()
@@ -66,7 +66,7 @@ end)
 
 gConfig.addType("Integer",
 function(value, options)
-	assert(isnumber(value), "Type \"Integer\" must be a number")
+	assert(isnumber(value), "Type \"Integer\" must be a number, got " .. type(value))
 
 	value = math.Round(value)
 
@@ -83,7 +83,7 @@ end)
 
 gConfig.addType("Number",
 function(value, options)
-	assert(isnumber(value), "Type \"Number\" must be a number")
+	assert(isnumber(value), "Type \"Number\" must be a number, got " .. type(value))
 
 	if options.precision then
 		value = math.Round(value, options.precision)
@@ -101,7 +101,7 @@ end)
 
 gConfig.addType("Enum",
 function(value, options)
-	assert(isnumber(value) or isstring(value), "Type \"Enum\" must be a number or string")
+	assert(isnumber(value) or isstring(value), "Type \"Enum\" must be a number or string, got " .. type(value))
 
 	if not options.data then error("Enum typeOptions.data is required") end
 
