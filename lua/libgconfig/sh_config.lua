@@ -163,6 +163,8 @@ function configmeta:set(id, value, ply)
 	else
 		gConfig.msgInfo("[%s] %q has been set to %q", self.name, item.name, gConfig.ellipsis(value, 100))
 	end
+
+	return true
 end
 
 local function createConfigObject(addonName)
@@ -185,15 +187,16 @@ end
 gConfig namespace
 ]]
 function gConfig.register(addonName)
-	--Get the file path of the addon
+	-- Get the file path of the addon
 	local t = debug.getinfo(2)
-	local addonPath = t.source
+	local addonPath = t.source or "unknown"
 
 	local config
 	if configs[addonName] then
 		config = configs[addonName]
 
 		if config.registered then
+			-- If this addon was re-registered somewhere else than the original file, it's probably a collision happening
 			if config.path == addonPath then
 				gConfig.msgInfo("Reloading config %q", addonName)
 
