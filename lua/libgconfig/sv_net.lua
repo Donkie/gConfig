@@ -6,6 +6,11 @@ function gConfig.sendValue(addon, item, value, ply)
 		net.WriteString(addon)
 		net.WriteString(item)
 		net.WriteType(value)
-		net.WriteEntity(ply)
+		if IsValid(ply) then
+			net.WriteBool(true)
+			net.WriteEntity(ply)
+		else
+			net.WriteBool(false)
+		end
 	net.Broadcast()
 end

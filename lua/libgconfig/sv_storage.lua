@@ -45,5 +45,5 @@ local function initialize()
 end
 
 function gConfig.SaveValue(addon, item, value, ply, comment)
-	gConfig.msgInfo("gConfig.SaveValue(%q, %q, %q, %q, %q)", addon, item, tostring(value), ply:Nick(), comment)
+	gConfig.msgInfo("gConfig.SaveValue(%q, %q, %q, %q, %q)", addon, item, tostring(value), IsValid(ply) and ply:Nick() or "", comment or "")
 end

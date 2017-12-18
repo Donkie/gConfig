@@ -108,7 +108,7 @@ function configmeta:hasAccess(id, ply)
 	return defaultAccess
 end
 
-function configmeta:set(id, value, ply)
+function configmeta:set(id, value, ply, comment)
 	local item = self.items[id]
 	assert(item, "id not valid")
 
@@ -120,7 +120,7 @@ function configmeta:set(id, value, ply)
 	end
 
 	-- Test access
-	if not self:hasAccess(id, ply) then
+	if IsValid(ply) and not self:hasAccess(id, ply) then
 		return false, "no access"
 	end
 
@@ -142,7 +142,6 @@ function configmeta:set(id, value, ply)
 	end
 
 	-- Finish
-	local comment = ""
 	gConfig.SaveValue(self.name, id, value, ply, comment)
 
 	self.data[id] = value
@@ -158,7 +157,7 @@ function configmeta:set(id, value, ply)
 		end
 	end
 
-	if SERVER then
+	if SERVER and IsValid(ply) then
 		gConfig.msgInfo("[%s] %s has set %q to %q", self.name, ply:Nick(), item.name, gConfig.ellipsis(value, 100))
 	else
 		gConfig.msgInfo("[%s] %q has been set to %q", self.name, item.name, gConfig.ellipsis(value, 100))
