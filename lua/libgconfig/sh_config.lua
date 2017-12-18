@@ -34,7 +34,7 @@ function configmeta:add(struct)
 	-- Test the variables
 	local id = struct.id
 	if self.items[id] then
-		gConfig.msgError("[%s] Config item with id %q has already been added", self.name, id)
+		gConfig.msgError("[%s] Config item %q has already been added", self.name, id)
 		return
 	end
 
@@ -185,12 +185,24 @@ end
 gConfig namespace
 ]]
 function gConfig.register(addonName)
+	--Get the file path of the addon
+	local t = debug.getinfo(2)
+	local addonPath = t.source
+
 	local config
 	if configs[addonName] then
 		config = configs[addonName]
+
 		if config.registered then
-			gConfig.msgError("Config %q has already been registered", addonName)
-			return
+			if config.path == addonPath then
+				gConfig.msgInfo("Reloading config %q", addonName)
+
+				config.items = {}
+				config.itemCount = 0
+			else
+				gConfig.msgError("Config %q has already been registered", addonName)
+				return
+			end
 		end
 	else
 		config = createConfigObject(addonName)
@@ -198,6 +210,7 @@ function gConfig.register(addonName)
 	end
 
 	config.registered = true
+	config.path = addonPath
 	return config
 end
 
