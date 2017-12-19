@@ -18,11 +18,7 @@ local function receiveData()
 
 	config.data[id] = value
 
-	if config.monitors[id] then
-		for _, f in pairs(config.monitors[id]) do
-			f(id, old, value)
-		end
-	end
+	config:runMonitors(id, old, value)
 
 	if LocalPlayer():IsAdmin() then
 		if IsValid(ply) then

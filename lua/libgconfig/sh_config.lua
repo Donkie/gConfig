@@ -151,11 +151,7 @@ function configmeta:set(id, value, ply, comment)
 		gConfig.sendValue(self.name, id, value, ply)
 	end
 
-	if self.monitors[id] then
-		for _, f in pairs(self.monitors[id]) do
-			f(id, old, value)
-		end
-	end
+	self:runMonitors(id, old, value)
 
 	if SERVER and IsValid(ply) then
 		gConfig.msgInfo("[%s] %s has set %q to %q", self.name, ply:Nick(), item.name, gConfig.ellipsis(value, 100))
@@ -164,6 +160,14 @@ function configmeta:set(id, value, ply, comment)
 	end
 
 	return true
+end
+
+function configmeta:runMonitors(id, old, value)
+	if not self.monitors[id] then return end
+
+	for _, f in pairs(self.monitors[id]) do
+		f(id, old, value)
+	end
 end
 
 local function createConfigObject(addonName)
