@@ -34,3 +34,13 @@ end
 
 gConfig.loadFolder("libgconfig")
 gConfig.loadFolder("gconfig", true)
+
+gConfig.filesLoaded = true
+
+hook.Add("Think", "gConfigWaitForLoad", function()
+	if gConfig.filesLoaded and gConfig.dbReady then
+		hook.Run("gConfigLoaded")
+		hook.Remove("Think", "gConfigWaitForLoad")
+	end
+end)
+
