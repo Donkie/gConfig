@@ -33,6 +33,56 @@ local function genericStringMatch(value, options)
 	return true
 end
 
+local function genericStringGui(panel, value, options, item, multiline)
+	local infotxttbl = {}
+	if options.min then table.insert(infotxttbl, string.format("min %i chars", options.min)) end
+	if options.max then table.insert(infotxttbl, string.format("max %i chars", options.max)) end
+	if options.pattern then table.insert(infotxttbl, string.format("pattern: %s", options.patternHelp or options.pattern)) end
+
+	local y = 0
+	local wide = 200
+	if #infotxttbl > 0 then
+		local info = vgui.Create("DLabel", panel)
+			info:SetText(table.concat(infotxttbl, ", "))
+			info:SizeToContents()
+		y = y + info:GetTall() + 2
+		wide = math.max(info:GetWide(), wide)
+	end
+
+	local txt = vgui.Create("DTextEntry", panel)
+		txt:SetPos(0, y)
+		txt:SetWide(wide)
+		txt:SetDrawLanguageID(false)
+		txt:SetMultiline(multiline)
+		txt:SetUpdateOnType(true)
+		if multiline then
+			txt:SetTall(200)
+		end
+
+	local validIcon = vgui.Create("DImage", txt)
+		validIcon:SetSize(16, 16)
+		validIcon:AlignRight(2)
+		validIcon:AlignBottom(2)
+
+	txt.OnValueChange = function(_, text)
+		local valid = true
+		if options.min and utf8.len(text) < options.min or
+			options.max and utf8.len(text) > options.max or
+			options.pattern and not string.match(text, options.pattern) then valid = false end
+
+		validIcon:SetImage(valid and "icon16/accept.png" or "icon16/cross.png")
+	end
+	txt:SetValue(value or "")
+
+	y = y + txt:GetTall()
+
+	panel:SetSize(wide, y)
+
+	return function()
+		return txt:GetText()
+	end
+end
+
 gConfig.addType({
 	name = "Boolean",
 	match = function(value, options)
@@ -40,7 +90,17 @@ gConfig.addType({
 
 		return true
 	end,
-	gui = function()
+	gui = function(panel, value, options, item)
+		local chkbx = vgui.Create("DCheckBoxLabel", panel)
+			chkbx:SetText(item.name)
+			chkbx:SetChecked(tobool(value))
+			chkbx:SizeToContents()
+
+		panel:SetSize(chkbx:GetSize())
+
+		return function()
+			return chkbx:GetChecked()
+		end
 	end,
 	preview = function(value, options)
 		return value and "Yes" or "No"
@@ -58,7 +118,8 @@ gConfig.addType({
 	match = function(value, options)
 		return genericStringMatch(value, options)
 	end,
-	gui = function()
+	gui = function(panel, value, options, item)
+		return genericStringGui(panel, value, options, item, false)
 	end,
 	preview = function(value, options)
 		return value
@@ -76,7 +137,8 @@ gConfig.addType({
 	match = function(value, options)
 		return genericStringMatch(value, options)
 	end,
-	gui = function()
+	gui = function(panel, value, options, item)
+		return genericStringGui(panel, value, options, item, true)
 	end,
 	preview = function(value, options)
 		return value
