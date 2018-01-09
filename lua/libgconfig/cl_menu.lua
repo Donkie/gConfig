@@ -25,9 +25,59 @@ local function drawPanelBackground(w, h, clr)
 	derma.GetDefaultSkin().tex.Panels.Normal(0, 0, w, h, clr)
 end
 
+local function configEditClick(configItemList, config, configItemId)
+	local item = config.items[configItemId]
+
+	-- Setup popup
+	local frame = vgui.Create("DFrame")
+		frame:SetTitle(string.format("Edit %q", item.name))
+		frame:SetSizable(false)
+		frame:SetDeleteOnClose(true)
+		frame:MakePopup()
+		frame.btnMaxim:SetVisible(false)
+		frame.btnMinim:SetVisible(false)
+
+	local panel = vgui.Create("Panel", frame)
+
+	local doneBtn = vgui.Create("DButton", frame)
+		doneBtn:SetSize(50, 25)
+		doneBtn:SetText("Done")
+
+	-- Call the type's gui function
+	local currentValue
+	if config.data[id] != nil then
+		currentValue = config.data[id]
+	else
+		currentValue = item.default
+	end
+
+	local itemType = gConfig.Types[item.type]
+
+	local getValueFunction = itemType.gui(panel, currentValue, item.typeOptions, item)
+
+	-- Update popup layout
+	local panelW, panelH = panel:GetSize()
+
+	frame:SetSize(math.max(panelW + 10, doneBtn:GetWide() + 10, 200), 30 + panelH + 5 + doneBtn:GetTall() + 5)
+	local mx, my = gui.MousePos()
+	local fx, fy = frame:GetSize()
+	frame:SetPos(mx - fx/2, my - fy/2)
+
+	panel:AlignTop(30)
+	panel:CenterHorizontal()
+
+	doneBtn:AlignBottom(5)
+	doneBtn:CenterHorizontal()
+	doneBtn.DoClick = function()
+		frame:Close()
+		local newValue = getValueFunction()
+		gConfig.sendValue(config, configItemId, newValue)
+	end
+end
 
 local function selectConfig(configItemList, configName, config)
 	configItemList:Clear()
+	configItemList.configItemPanels = {}
 
 	local header = vgui.Create("DLabel", configItemList)
 		header:SetText(configName)
@@ -83,6 +133,8 @@ local function selectConfig(configItemList, configName, config)
 		local listLayout = vgui.Create("DListLayout")
 		category:SetContents(listLayout)
 
+		listLayout.panels = {}
+
 		for k, tbl in pairs(items) do
 			if k == "__key" then continue end
 
@@ -115,6 +167,13 @@ local function selectConfig(configItemList, configName, config)
 				end
 				itemValuePreview:SizeToContentsY()
 
+			local itemEdit = vgui.Create("DImageButton", pnl)
+				itemEdit:SetImage("icon16/pencil.png")
+				itemEdit:SetSize(16, 16)
+				itemEdit.DoClick = function()
+					configEditClick(configItemList, config, tbl.id)
+				end
+
 			pnl.PerformLayout = function(_, w, h)
 				local nameW = w / 2 - 20
 				local valueW = w / 2 - 20
@@ -130,9 +189,14 @@ local function selectConfig(configItemList, configName, config)
 				itemValuePreview:SetWide(valueW)
 
 				pnl:SetTall(11 + itemName:GetTall() + itemDescription:GetTall())
+
+				itemEdit:CenterVertical()
+				itemEdit:AlignRight(5)
 			end
 
+			pnl.itemValuePreview = itemValuePreview
 			listLayout:Add(pnl)
+			configItemList.configItemPanels[tbl.id] = pnl
 		end
 	end
 end

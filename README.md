@@ -67,8 +67,8 @@ bool   | mapUnique   | [optional] Is this items value based on the current map
 Type | Name | Options | Description
 --- | --- | --- | ---
 bool | Boolean | | A boolean (true/false)
-string | String | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ pattern - Must match this pattern</li></ul> | A one-line string
-string | Text | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ pattern - Must match this pattern</li></ul> | A multiline string
+string | String | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ pattern - Must match this pattern</li><li>_string_ patternHelp - User-friendly description of the pattern</li></ul> | A one-line string
+string | Text | <ul><li>_integer_ min - Minimum length</li><li>_integer_ max - Maximum length</li><li>_string_ pattern - Must match this pattern</li><li>_string_ patternHelp - User-friendly description of the pattern</li></ul> | A multiline string
 number | Integer | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li></ul> | An integer number
 number | Number | <ul><li>_integer_ min - Minimum value</li><li>_integer_ max - Maximum value</li><li>_integer_ precision - Number of decimal places</li></ul> | A non-integer number
 any | Enum | <ul><li>_table_ data - A dictionary of allowed values</li><li>_bool_ allowEmpty - Allows the user to select an empty list item</li></ul> | Allows any value in the supplied list. Keys being the returned value, values being the displayed name. Only supports _string_ or _number_ keys.

@@ -29,3 +29,7 @@ local function receiveData()
 	end
 end
 net.Receive("gConfigSend", receiveData)
+
+function gConfig.sendValue(config, configItemId, newValue)
+	print("gConfig.sendValue", config.name, configItemId, newValue)
+end
