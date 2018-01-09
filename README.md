@@ -86,7 +86,7 @@ table | List | <ul><li>_string_ type - The item type</li><li>_table_ typeOptions
 Type     | Name        | Description
 ---      | ---         | ---
 string   | name        | Type name
-function | match       | <ul><li>`_boolean_ (_any_ value, _table_ typeOptions)`</li><li>return whether `value` is permitted</li></ul>
-function | gui         | <ul><li>`_void_ (?)`</li><li>called whenever the picker for this type needs to be created</li></ul>
-function | serialize   | <ul><li>`_string_ (_any_ value)`</li><li>called to serialize `value` into a string</li></ul>
-function | unserialize | <ul><li>`_any_ (_string_ >value)`</li><li>called to unserialize `value` into the type</li></ul>
+function | match       | <ul><li>_boolean_ (_any_ value, _table_ typeOptions)</li><li>return whether `value` is permitted</li></ul>
+function | gui         | <ul><li>_function_ (_Panel_ parent, _any_ currentValue, _table_ typeOptions, _ConfigStruct_ item)</li><li>called whenever the picker for this type needs to be created</li></ul>
+function | serialize   | <ul><li>_string_ (_any_ value)</li><li>called to serialize `value` into a string</li></ul>
+function | unserialize | <ul><li>_any_ (_string_ >value)</li><li>called to unserialize `value` into the type</li></ul>
