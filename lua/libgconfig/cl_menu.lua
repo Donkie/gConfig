@@ -17,7 +17,8 @@ end
 local fontButton1 = makeFont({size = 16, weight = 700})
 local fontHeader1 = makeFont({size = 26, weight = 600})
 local fontConfigItem1 = makeFont({size = 18, weight = 700})
-local fontConfigItem2 = makeFont({size = 18, weight = 600, italic = true})
+local fontConfigItem2 = makeFont({size = 18, weight = 600})
+local fontConfigItem2i = makeFont({size = 18, weight = 600, italic = true})
 local fontConfigItem3 = makeFont({size = 14, weight = 500})
 
 local function drawPanelBackground(w, h, clr)
@@ -85,6 +86,8 @@ local function selectConfig(configItemList, configName, config)
 		for k, tbl in pairs(items) do
 			if k == "__key" then continue end
 
+			local itemValue, isDefaultValue = config:getPreview(tbl.id)
+
 			local pnl = vgui.Create("DPanel")
 				pnl:Dock(TOP)
 				pnl:DockMargin(0, 2, 0, 2)
@@ -102,9 +105,14 @@ local function selectConfig(configItemList, configName, config)
 				itemDescription:SetPos(5, 5 + itemName:GetTall() + 1)
 
 			local itemValuePreview = vgui.Create("DLabel", pnl)
-				itemValuePreview:SetText(tostring(tbl.default))
-				itemValuePreview:SetFont(fontConfigItem2)
-				itemValuePreview:SetTextColor(Color(80, 80, 80))
+				itemValuePreview:SetText(itemValue)
+				if isDefaultValue then
+					itemValuePreview:SetFont(fontConfigItem2i)
+					itemValuePreview:SetTextColor(Color(80, 80, 80))
+				else
+					itemValuePreview:SetFont(fontConfigItem2)
+					itemValuePreview:SetTextColor(Color(80, 150, 80))
+				end
 				itemValuePreview:SizeToContentsY()
 
 			pnl.PerformLayout = function(_, w, h)

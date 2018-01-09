@@ -81,6 +81,30 @@ function configmeta:get(id, ...)
 	return value
 end
 
+function configmeta:getPreview(id)
+	local item = self.items[id]
+	assert(item != nil)
+
+	local value, isdefault
+	if self.data[id] != nil then
+		value = self.data[id]
+		isdefault = false
+	else
+		value = item.default
+		isdefault = true
+	end
+
+	if value == nil then
+		return "*no value*", isdefault
+	end
+
+	local itemType = gConfig.Types[item.type]
+
+	local previewValue = itemType.preview(value, item.typeOptions)
+
+	return previewValue, isdefault
+end
+
 function configmeta:monitor(id, onChange)
 	self.monitors[id] = self.monitors[id] or {}
 	table.insert(self.monitors[id], onChange)
@@ -125,9 +149,9 @@ function configmeta:set(id, value, ply, comment)
 	end
 
 	-- Test match
-	local typ = gConfig.Types[item.type]
+	local itemType = gConfig.Types[item.type]
 
-	local isValid, newVal = typ.match(value, item.typeOptions)
+	local isValid, newVal = itemType.match(value, item.typeOptions)
 
 	if not isValid then
 		return false, "invalid value"

@@ -2,7 +2,7 @@
 local types = {}
 gConfig.Types = types
 
-local requiredVars = {"name", "match", "gui", "serialize", "unserialize"}
+local requiredVars = {"name", "match", "gui", "preview", "serialize", "unserialize"}
 function gConfig.addType(struct)
 	-- Make sure all required variables exist
 	for _, var in pairs(requiredVars) do
@@ -42,6 +42,9 @@ gConfig.addType({
 	end,
 	gui = function()
 	end,
+	preview = function(value, options)
+		return value and "Yes" or "No"
+	end,
 	serialize = function(value)
 		return value and "1" or "0"
 	end,
@@ -57,6 +60,9 @@ gConfig.addType({
 	end,
 	gui = function()
 	end,
+	preview = function(value, options)
+		return value
+	end,
 	serialize = function(value)
 		return value
 	end,
@@ -71,6 +77,9 @@ gConfig.addType({
 		return genericStringMatch(value, options)
 	end,
 	gui = function()
+	end,
+	preview = function(value, options)
+		return value
 	end,
 	serialize = function(value)
 		return value
@@ -93,6 +102,9 @@ gConfig.addType({
 		return true, value
 	end,
 	gui = function()
+	end,
+	preview = function(value, options)
+		return tostring(value)
 	end,
 	serialize = function(value)
 		return tostring(math.Round(value))
@@ -117,6 +129,9 @@ gConfig.addType({
 	end,
 	gui = function()
 	end,
+	preview = function(value, options)
+		return tostring(value)
+	end,
 	serialize = function(value)
 		return tostring(value)
 	end,
@@ -138,6 +153,9 @@ gConfig.addType({
 		return true
 	end,
 	gui = function()
+	end,
+	preview = function(value, options)
+		return options.data[value]
 	end,
 	serialize = function(value)
 		local typ
