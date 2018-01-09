@@ -87,7 +87,7 @@ function configmeta:monitor(id, onChange)
 end
 
 function configmeta:hasAccess(id, ply)
-	if CLIENT then return true end
+	--if CLIENT then return true end -- remove?
 
 	local item = self.items[id]
 	local accessLevel = item.access
@@ -228,4 +228,8 @@ function gConfig.get(addonName)
 		configs[addonName] = config
 		return config
 	end
+end
+
+function gConfig.getList()
+	return configs
 end
