@@ -30,12 +30,8 @@ Throws an error if the addon has already been registered.
 Returns a _Config_ object from the gConfig system. The addon doesn't have to be registered yet.
 
 gConfig.register and gConfig.get are split up in order to detect addon collisions.
-#### _void_ gConfig.addType(_string_ typeName, _function_ match(_any_ value, _table_ typeOptions), _function_ gui(?), _function_ serialize(_any_ value), _function_ unserialize(_string_ value))
-Adds a new type to the gConfig system. (Use a struct instead of a bunch of parameters?)
-* **match** should return a _boolean_ wether this value is permitted
-* **gui** is called whenever the picker for this needs to be created
-* **serialize** is called to serialize the value, return a _string_
-* **unserialize** is called to unserialize the value, return _any_
+#### _void_ gConfig.addType(_ConfigTypeStruct_ struct)
+Adds a new type to the gConfig system.
 
 ### Config class
 ------
@@ -84,3 +80,13 @@ string | Player | | A player. Returns a 32bit SteamID.
 number | Team | | A team defined with the team. system (includes DarkRP teams)
 function | Function | ? | A piece of lua code for advanced configuration needs. Going to use RunString with a wrapper function.
 table | List | <ul><li>_string_ type - The item type</li><li>_table_ typeOptions - A list of options</li><li>_integer_ maxItems - Maximum number of items</li><li>_bool_ unique - Only allow unique values.</li><li>_bool_ lookupTable - Returns the table as a lookup table for faster indexing. Disables nesting support. Forces unique.</li></ul> | A list of items of the chosen type. Returns a sequential array of the data. Supports nested lists.
+
+### ConfigTypeStruct
+------
+Type     | Name        | Description
+---      | ---         | ---
+string   | name        | Type name
+function | match       | <ul><li>`_boolean_ (_any_ value, _table_ typeOptions)`</li><li>return whether `value` is permitted</li></ul>
+function | gui         | <ul><li>`_void_ (?)`</li><li>called whenever the picker for this type needs to be created</li></ul>
+function | serialize   | <ul><li>`_string_ (_any_ value)`</li><li>called to serialize `value` into a string</li></ul>
+function | unserialize | <ul><li>`_any_ (_string_ >value)`</li><li>called to unserialize `value` into the type</li></ul>
