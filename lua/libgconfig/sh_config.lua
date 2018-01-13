@@ -58,10 +58,27 @@ function configmeta:add(struct)
 end
 
 function configmeta:get(id, ...)
-	if not self.items[id] then
+	local item = self.items[id]
+
+	if not item then
 		gConfig.msgError("[%s] Tried to get value of invalid item id %q", self.name, id)
 		debug.Trace()
 		return
+	end
+
+	local realm = item.realm
+	if SERVER then
+		if realm == gConfig.Client then
+			gConfig.msgError("[%s] Tried to get client variable for %q on server", self.name, id)
+			debug.Trace()
+			return
+		end
+	else
+		if realm == gConfig.Server then
+			gConfig.msgError("[%s] Tried to get server variable for %q on client", self.name, id)
+			debug.Trace()
+			return
+		end
 	end
 
 	local value
@@ -70,7 +87,7 @@ function configmeta:get(id, ...)
 		value = self.data[id]
 	else
 		-- Use default
-		value = self.items[id].default
+		value = item.default
 	end
 
 	-- If it's a function, call it and use its return value
