@@ -46,8 +46,8 @@ local function configEditClick(config, configItemId)
 
 	-- Call the type's gui function
 	local currentValue
-	if config.data[id] != nil then
-		currentValue = config.data[id]
+	if config.data[configItemId] != nil then
+		currentValue = config.data[configItemId]
 	else
 		currentValue = item.default
 	end
@@ -62,7 +62,7 @@ local function configEditClick(config, configItemId)
 	frame:SetSize(math.max(panelW + 10, doneBtn:GetWide() + 10, 200), 30 + panelH + 5 + doneBtn:GetTall() + 5)
 	local mx, my = gui.MousePos()
 	local fx, fy = frame:GetSize()
-	frame:SetPos(mx - fx/2, my - fy/2)
+	frame:SetPos(mx - fx / 2, my - fy / 2) -- Center on mouse
 
 	panel:AlignTop(30)
 	panel:CenterHorizontal()
@@ -72,7 +72,7 @@ local function configEditClick(config, configItemId)
 	doneBtn.DoClick = function()
 		frame:Close()
 		local newValue = getValueFunction()
-		gConfig.sendValue(config, configItemId, newValue)
+		gConfig.setValue(config, configItemId, newValue)
 	end
 end
 
