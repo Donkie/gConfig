@@ -40,6 +40,10 @@ local function configEditClick(config, configItemId)
 
 	local panel = vgui.Create("Panel", frame)
 
+	local commentEntry = vgui.Create("DTextEntryPlaceholder", frame)
+		commentEntry:SetPlaceholderText("Optional Comment")
+		commentEntry:SetDrawLanguageID(false)
+
 	local doneBtn = vgui.Create("DButton", frame)
 		doneBtn:SetSize(50, 25)
 		doneBtn:SetText("Done")
@@ -59,7 +63,7 @@ local function configEditClick(config, configItemId)
 	-- Update popup layout
 	local panelW, panelH = panel:GetSize()
 
-	frame:SetSize(math.max(panelW + 10, doneBtn:GetWide() + 10, 200), 30 + panelH + 5 + doneBtn:GetTall() + 5)
+	frame:SetSize(math.max(panelW + 10, doneBtn:GetWide() + 10, 200), 30 + panelH + 5 + commentEntry:GetTall() + 5 + doneBtn:GetTall() + 5)
 	local mx, my = gui.MousePos()
 	local fx, fy = frame:GetSize()
 	frame:SetPos(mx - fx / 2, my - fy / 2) -- Center on mouse
@@ -67,12 +71,16 @@ local function configEditClick(config, configItemId)
 	panel:AlignTop(30)
 	panel:CenterHorizontal()
 
+	commentEntry:SetWide(frame:GetWide() - 10)
+	commentEntry:MoveBelow(panel, 5)
+	commentEntry:AlignLeft(5)
+
 	doneBtn:AlignBottom(5)
 	doneBtn:CenterHorizontal()
 	doneBtn.DoClick = function()
 		frame:Close()
 		local newValue = getValueFunction()
-		gConfig.setValue(config, configItemId, newValue)
+		gConfig.setValue(config, configItemId, newValue, commentEntry:GetValue())
 	end
 end
 

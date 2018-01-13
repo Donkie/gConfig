@@ -32,6 +32,7 @@ net.Receive("gConfigSendValue", function(_, ply)
 
 	local addon = net.ReadString()
 	local id = net.ReadString()
+	local comment = net.ReadString()
 	local newValue = net.ReadType()
 
 	if not gConfig.exists(addon) then return end -- Invalid config
@@ -40,7 +41,7 @@ net.Receive("gConfigSendValue", function(_, ply)
 
 	if not config.items[id] then return end -- Invalid item
 
-	local success, errMsg = config:set(id, newValue, ply, comment or "")
+	local success, errMsg = config:set(id, newValue, ply, comment)
 	if not success then
 		gConfig.msgPlayerWarning(ply, "Update failed with reason: %s", errMsg)
 		return

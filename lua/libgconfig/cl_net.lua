@@ -30,7 +30,7 @@ local function receiveData()
 end
 net.Receive("gConfigSend", receiveData)
 
-function gConfig.setValue(config, id, newValue)
+function gConfig.setValue(config, id, newValue, comment)
 	local item = config.items[id]
 
 	if item.realm == gConfig.Client then
@@ -39,6 +39,7 @@ function gConfig.setValue(config, id, newValue)
 		net.Start("gConfigSendValue")
 			net.WriteString(config.name)
 			net.WriteString(id)
+			net.WriteString(comment or "")
 			net.WriteType(newValue)
 		net.SendToServer()
 	end
