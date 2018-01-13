@@ -187,9 +187,15 @@ function configmeta:set(id, value, ply, comment)
 
 	self.data[id] = value
 
-	if SERVER and realm == gConfig.Shared then
-		-- Send to clients
-		gConfig.sendValue(self.name, id, value, ply)
+	-- Send to clients
+	if SERVER then
+		if realm == gConfig.Shared then
+			gConfig.sendValue(self.name, id, value, ply)
+		elseif realm == gConfig.Server then
+			-- If it's a server variable, send an update to the author
+			-- so his menu is updated directly
+			gConfig.sendValue(self.name, id, value, ply, ply)
+		end
 	end
 
 	self:runMonitors(id, old, value)

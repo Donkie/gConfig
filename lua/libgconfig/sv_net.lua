@@ -1,21 +1,60 @@
 
 util.AddNetworkString("gConfigSend")
+util.AddNetworkString("gConfigSendFullUpdate")
+util.AddNetworkString("gConfigSendServerVariables")
 util.AddNetworkString("gConfigSendValue")
 util.AddNetworkString("gConfigRequestHistory")
 util.AddNetworkString("gConfigSendHistory")
 
-function gConfig.sendValue(addon, item, value, ply)
+function gConfig.sendValue(addon, item, value, author, ply)
 	net.Start("gConfigSend")
 		net.WriteString(addon)
 		net.WriteString(item)
 		net.WriteType(value)
-		if IsValid(ply) then
+		if IsValid(author) then
 			net.WriteBool(true)
-			net.WriteEntity(ply)
+			net.WriteEntity(author)
 		else
 			net.WriteBool(false)
 		end
-	net.Broadcast()
+	if ply then
+		net.Send(ply)
+	else
+		net.Broadcast()
+	end
+end
+
+local function writeFullUpdateConfig(name, tbl, sendShared, sendServer)
+	net.WriteString(name)
+
+	for id, item in pairs(tbl.items) do
+		if item.realm == gConfig.Server and not sendServer then continue end
+		if item.realm == gConfig.Shared and not sendShared then continue end
+
+		net.WriteBool(true) -- here comes item
+		net.WriteString(id)
+		net.WriteType(tbl.data[id])
+	end
+	net.WriteBool(false) -- no more items
+end
+
+function gConfig.sendFullUpdate(ply, sendShared, sendServer)
+	net.Start("gConfigSendFullUpdate")
+		for name, tbl in pairs(gConfig.getList()) do
+			net.WriteBool(true) -- here comes config
+			writeFullUpdateConfig(name, tbl, sendShared, sendServer)
+		end
+		net.WriteBool(false) -- no more configs
+	net.Send(ply)
+end
+
+function gConfig.sendFullUpdateConfig(ply, config, sendShared, sendServer)
+	net.Start("gConfigSendFullUpdate")
+		net.WriteBool(true) -- here comes config
+		writeFullUpdateConfig(config.name, config, sendShared, sendServer)
+
+		net.WriteBool(false) -- no more configs
+	net.Send(ply)
 end
 
 local function rateLimit(ply)

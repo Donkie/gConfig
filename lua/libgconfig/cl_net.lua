@@ -30,6 +30,28 @@ local function receiveData()
 end
 net.Receive("gConfigSend", receiveData)
 
+local function receiveFullUpdate(len)
+	local addonCount = 0
+	local itemCount = 0
+
+	while net.ReadBool() do
+		addonCount = addonCount + 1
+		local addon = net.ReadString()
+		local config = gConfig.get(addon)
+
+		while net.ReadBool() do
+			itemCount = itemCount + 1
+			local id = net.ReadString()
+			local value = net.ReadType()
+
+			config.data[id] = value
+		end
+	end
+
+	gConfig.msgInfo("Received %i config items for %i addons in %s of data", itemCount, addonCount, string.NiceSize(math.Round(len / 8)))
+end
+net.Receive("gConfigSendFullUpdate", receiveFullUpdate)
+
 function gConfig.setValue(config, id, newValue, comment)
 	local item = config.items[id]
 
