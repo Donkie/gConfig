@@ -33,6 +33,7 @@ local function configEditClick(configItemList, config, configItemId)
 		frame:SetTitle(string.format("Edit %q", item.name))
 		frame:SetSizable(false)
 		frame:SetDeleteOnClose(true)
+		frame:SetSize(300, 300) -- Set an initial size just so it's not 0, 0 if it breaks
 		frame:MakePopup()
 		frame.btnMaxim:SetVisible(false)
 		frame.btnMinim:SetVisible(false)

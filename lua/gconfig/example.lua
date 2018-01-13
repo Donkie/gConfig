@@ -38,3 +38,32 @@ Config:add({
 		max = 300
 	}
 })
+
+Config:add({
+	id = "integertest",
+	realm = gConfig.Server,
+	access = gConfig.Admin,
+	name = "Integer Test",
+	description = "This tests an integer value",
+	category = "Test",
+	type = "Integer",
+	typeOptions = {
+		min = 0,
+		max = 100
+	}
+})
+
+Config:add({
+	id = "numbertest",
+	realm = gConfig.Server,
+	access = gConfig.Admin,
+	name = "Number Test",
+	description = "This tests a number value",
+	category = "Test",
+	type = "Number",
+	typeOptions = {
+		min = -100,
+		max = 100,
+		decimals = 2
+	}
+})

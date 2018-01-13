@@ -83,6 +83,25 @@ local function genericStringGui(panel, value, options, item, multiline)
 	end
 end
 
+local function genericNumberGui(panel, value, options, item, decimals)
+	local slider = vgui.Create("DNumSlider", panel)
+		--slider.Label:SetVisible(false)
+		slider.PerformLayout = function() end
+		slider:SetText(item.name)
+		slider:SetMin(options.min or 0)
+		slider:SetMax(options.max or 100)
+		slider:SetDecimals(decimals)
+		slider:SetValue(value or 0)
+		slider:SetWide(300)
+		slider.Label:SizeToContents()
+
+	panel:SetSize(slider:GetSize())
+
+	return function()
+		return slider:GetValue()
+	end
+end
+
 gConfig.addType({
 	name = "Boolean",
 	match = function(value, options)
@@ -163,7 +182,8 @@ gConfig.addType({
 
 		return true, value
 	end,
-	gui = function()
+	gui = function(panel, value, options, item)
+		return genericNumberGui(panel, value, options, item, 0)
 	end,
 	preview = function(value, options)
 		return tostring(value)
@@ -189,7 +209,8 @@ gConfig.addType({
 
 		return true, value
 	end,
-	gui = function()
+	gui = function(panel, value, options, item)
+		return genericNumberGui(panel, value, options, item, options.decimals or 2)
 	end,
 	preview = function(value, options)
 		return tostring(value)
