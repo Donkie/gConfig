@@ -254,6 +254,14 @@ function gConfig.get(addonName)
 	end
 end
 
+function gConfig.exists(addonName)
+	if configs[addonName] then
+		return true
+	else
+		return false
+	end
+end
+
 function gConfig.getList()
 	return configs
 end
