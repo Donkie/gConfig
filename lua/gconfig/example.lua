@@ -104,3 +104,12 @@ Config:add({
 		allowEmpty = true,
 	}
 })
+
+Config:add({
+	id = "nodesctest",
+	realm = gConfig.Shared,
+	access = gConfig.Admin,
+	name = "No Description Test",
+	category = "Test",
+	type = "String",
+})

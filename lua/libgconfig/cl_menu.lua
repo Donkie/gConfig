@@ -250,21 +250,35 @@ local function selectConfig(configItemList, configName, config)
 
 				itemName:SetWide(nameW)
 
-				local text = table.concat(string.Wrap(fontConfigItem3, tbl.description, descw), "\n")
-				itemDescription:SetText(text)
-				itemDescription:SizeToContents()
+				local hasDescription = tbl.description and #tbl.description > 0
+				local descTall = 0
+				if hasDescription then
+					local text = table.concat(string.Wrap(fontConfigItem3, tbl.description, descw), "\n")
+					itemDescription:SetText(text)
+					itemDescription:SizeToContents()
+					descTall = itemDescription:GetTall()
+				end
+				itemDescription:SetVisible(hasDescription)
 
 				itemValuePreview:SetPos(5 + nameW, 5)
 				itemValuePreview:SetWide(valueW)
 
-				pnl:SetTall(11 + itemName:GetTall() + itemDescription:GetTall())
+				pnl:SetTall(11 + itemName:GetTall() + descTall)
 
-				local spacing = (h - 16 * 2) / 3
-				itemHistory:AlignTop(spacing)
-				itemHistory:AlignRight(5)
+				if hasDescription then
+					local spacing = (h - 16 * 2) / 3
+					itemHistory:AlignTop(spacing)
+					itemHistory:AlignRight(5)
 
-				itemEdit:AlignBottom(spacing)
-				itemEdit:AlignRight(5)
+					itemEdit:AlignBottom(spacing)
+					itemEdit:AlignRight(5)
+				else
+					itemEdit:CenterVertical()
+					itemEdit:AlignRight(5)
+
+					itemHistory:CenterVertical()
+					itemHistory:MoveLeftOf(itemEdit, 5)
+				end
 			end
 
 			pnl.Think = function()

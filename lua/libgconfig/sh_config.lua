@@ -19,7 +19,7 @@ local configs = {}
 local configmeta = {}
 configmeta.__index = configmeta
 
-local requiredVars = {"id", "realm", "access", "name", "description", "type"}
+local requiredVars = {"id", "realm", "access", "name", "type"}
 function configmeta:add(struct)
 	if not self.registered then
 		gConfig.msgError("[%s] Addon not registered yet (use gConfig.register)", self.name)
