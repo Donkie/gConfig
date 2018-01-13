@@ -80,3 +80,48 @@ function gConfig.ellipsis(val, len)
 	end
 	return str
 end
+
+--[[
+Player notifications
+]]
+if SERVER then
+	util.AddNetworkString("gConfigMessage")
+	function gConfig.msgPlayer(ply, text, clr)
+		net.Start("gConfigMessage")
+			net.WriteString(text)
+			net.WriteColor(clr)
+		net.Send(ply)
+	end
+else
+	local function chatPrint(text, clr)
+		chat.AddText(gConfig.colors.main, "[gConfig] ", clr, text)
+		surface.PlaySound("buttons/button9.wav") -- 14 sounds good too
+	end
+
+	net.Receive("gConfigMessage", function()
+		local text = net.ReadString()
+		local clr = net.ReadColor()
+
+		chatPrint(text, clr)
+	end)
+
+	function gConfig.msgPlayer(ply, text, clr)
+		chatPrint(text, clr)
+	end
+end
+
+function gConfig.msgPlayerInfo(ply, text, ...)
+	gConfig.msgPlayer(ply, text:format(...), gConfig.colors.info)
+end
+
+function gConfig.msgPlayerSuccess(ply, text, ...)
+	gConfig.msgPlayer(ply, text:format(...), gConfig.colors.success)
+end
+
+function gConfig.msgPlayerWarning(ply, text, ...)
+	gConfig.msgPlayer(ply, text:format(...), gConfig.colors.warning)
+end
+
+function gConfig.msgPlayerError(ply, text, ...)
+	gConfig.msgPlayer(ply, text:format(...), gConfig.colors.error)
+end
