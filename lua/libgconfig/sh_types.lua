@@ -235,7 +235,24 @@ gConfig.addType({
 
 		return true
 	end,
-	gui = function()
+	gui = function(panel, value, options, item)
+		local combobox = vgui.Create("DComboBox", panel)
+			combobox:SetWide(300)
+
+		if options.allowEmpty then
+			combobox:AddChoice("", nil, value == nil)
+		end
+
+		for data, text in pairs(options.data) do
+			combobox:AddChoice(text, data, data == value)
+		end
+
+		panel:SetSize(combobox:GetSize())
+
+		return function()
+			local _, data = combobox:GetSelected()
+			return data
+		end
 	end,
 	preview = function(value, options)
 		return options.data[value]

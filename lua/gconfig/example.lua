@@ -67,3 +67,40 @@ Config:add({
 		decimals = 2
 	}
 })
+
+Config:add({
+	id = "enumtest",
+	realm = gConfig.Server,
+	access = gConfig.Admin,
+	name = "Enum Test",
+	description = "This tests an enum value",
+	category = "Test",
+	default = "key1",
+	type = "Enum",
+	typeOptions = {
+		data = {
+			key1 = "Enum 1",
+			key2 = "Enum 2",
+			key3 = "Enum 3",
+		},
+		allowEmpty = false,
+	}
+})
+
+Config:add({
+	id = "enumtest2",
+	realm = gConfig.Server,
+	access = gConfig.Admin,
+	name = "Enum Test 2",
+	description = "This tests an enum value with allowEmpty",
+	category = "Test",
+	type = "Enum",
+	typeOptions = {
+		data = {
+			key1 = "Enum 1",
+			key2 = "Enum 2",
+			key3 = "Enum 3",
+		},
+		allowEmpty = true,
+	}
+})
