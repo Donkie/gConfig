@@ -117,6 +117,40 @@ function gConfig.GetValues()
 	end)
 end
 
+function gConfig.GetHistory(addon, item, callback)
+	assert(gConfig.exists(addon), "invalid config " .. addon)
+
+	local config = gConfig.get(addon)
+
+	local itemTbl = config.items[item]
+	assert(istable(itemTbl), "invalid item " .. item)
+
+	local itemType = itemTbl.type
+	local unserialize = gConfig.Types[itemType].unserialize
+
+	db:query([[
+		SELECT a.`date`, a.`value`, a.`userNick`, a.`userSteam`, a.`comment`
+		FROM `gconfig_data` a
+		WHERE a.`addon` = ? AND a.`item` = ?
+		ORDER BY a.`date` DESC
+		LIMIT 255
+	]], {addon, item}):done(function(data)
+		local rettbl = {}
+		for k, row in pairs(data) do
+			local valueObj = unserialize(row.value)
+
+			rettbl[k] = {
+				date = row.date,
+				value = valueObj,
+				author = row.userNick,
+				authorsid = row.userSteam,
+				comment = row.comment,
+			}
+		end
+		callback(rettbl)
+	end)
+end
+
 initialize()
 
 hook.Add("gConfigLoaded", "LoadgConfigValues", function()

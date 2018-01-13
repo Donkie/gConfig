@@ -76,6 +76,68 @@ local function configEditClick(config, configItemId)
 	end
 end
 
+local currentHistoryFrame
+local function configHistoryClick(config, configItemId)
+	if IsValid(currentHistoryFrame) then currentHistoryFrame:Remove() end
+
+	local item = config.items[configItemId]
+
+	local frame = vgui.Create("DFrame")
+		frame:SetSize(500, 300)
+		frame:Center()
+		frame:SetSizable(true)
+		frame:SetTitle(string.format("History for %q", item.name))
+		frame:MakePopup()
+
+	local listView = vgui.Create("DListView", frame)
+		listView:Dock(FILL)
+		listView:AddColumn("Date")
+		listView:AddColumn("Author")
+		listView:AddColumn("Value")
+		listView:AddColumn("Comment")
+
+	frame.listView = listView
+	frame.config = config.name
+	frame.configItemId = configItemId
+
+	currentHistoryFrame = frame
+
+	net.Start("gConfigRequestHistory")
+		net.WriteString(config.name)
+		net.WriteString(configItemId)
+	net.SendToServer()
+end
+
+net.Receive("gConfigSendHistory", function()
+	if not IsValid(currentHistoryFrame) then return end
+
+	local addon = net.ReadString()
+	local configItemId = net.ReadString()
+
+	if currentHistoryFrame.config != addon or
+		currentHistoryFrame.configItemId != configItemId then return end
+
+	local config = gConfig.get(addon)
+	local item = config.items[configItemId]
+	local itemType = gConfig.Types[item.type]
+
+	currentHistoryFrame.listView:Clear()
+
+	for _ = 1, net.ReadUInt(8) do
+		local date = net.ReadUInt(32)
+		local author = net.ReadString()
+		local authorsid = net.ReadString()
+		local comment = net.ReadString()
+		local value = net.ReadType()
+
+		local datestr = os.date("%Y-%m-%d %H:%M:%S %z", date)
+		local datestr = os.date("%c", date)
+		local previewValue = itemType.preview(value, item.typeOptions)
+
+		currentHistoryFrame.listView:AddLine(datestr, string.format("%s (%s)", author, authorsid), previewValue, comment)
+	end
+end)
+
 local function selectConfig(configItemList, configName, config)
 	configItemList:Clear()
 	configItemList.configItemPanels = {}
@@ -165,6 +227,14 @@ local function selectConfig(configItemList, configName, config)
 					configEditClick(config, tbl.id)
 				end
 
+			local itemHistory = vgui.Create("DImageButton", pnl)
+				itemHistory:SetImage("icon16/clock.png")
+				itemHistory:SetTooltip("History")
+				itemHistory:SetSize(16, 16)
+				itemHistory.DoClick = function()
+					configHistoryClick(config, tbl.id)
+				end
+
 			pnl.PerformLayout = function(_, w, h)
 				local nameW = w / 2 - 20
 				local valueW = w / 2 - 20
@@ -181,7 +251,11 @@ local function selectConfig(configItemList, configName, config)
 
 				pnl:SetTall(11 + itemName:GetTall() + itemDescription:GetTall())
 
-				itemEdit:CenterVertical()
+				local spacing = (h - 16 * 2) / 3
+				itemHistory:AlignTop(spacing)
+				itemHistory:AlignRight(5)
+
+				itemEdit:AlignBottom(spacing)
 				itemEdit:AlignRight(5)
 			end
 

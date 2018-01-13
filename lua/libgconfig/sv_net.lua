@@ -1,6 +1,8 @@
 
 util.AddNetworkString("gConfigSend")
 util.AddNetworkString("gConfigSendValue")
+util.AddNetworkString("gConfigRequestHistory")
+util.AddNetworkString("gConfigSendHistory")
 
 function gConfig.sendValue(addon, item, value, ply)
 	net.Start("gConfigSend")
@@ -16,12 +18,17 @@ function gConfig.sendValue(addon, item, value, ply)
 	net.Broadcast()
 end
 
-net.Receive("gConfigSendValue", function(_, ply)
-	if (ply.gConfigNextSendValue or 0) > CurTime() then
+local function rateLimit(ply)
+	if (ply.gConfigNextMessage or 0) > SysTime() then
 		gConfig.msgPlayerWarning(ply, "Please wait before doing that again.")
-		return
+		return true
 	end
-	ply.gConfigNextSendValue = CurTime() + 2
+	ply.gConfigNextMessage = SysTime() + 2
+	return false
+end
+
+net.Receive("gConfigSendValue", function(_, ply)
+	if rateLimit(ply) then return end
 
 	local addon = net.ReadString()
 	local id = net.ReadString()
@@ -38,4 +45,38 @@ net.Receive("gConfigSendValue", function(_, ply)
 		gConfig.msgPlayerWarning(ply, "Update failed with reason: %s", errMsg)
 		return
 	end
+end)
+
+net.Receive("gConfigRequestHistory", function(_, ply)
+	if rateLimit(ply) then return end
+
+	local addon = net.ReadString()
+	local id = net.ReadString()
+
+	if not gConfig.exists(addon) then return end -- Invalid config
+
+	local config = gConfig.get(addon)
+
+	if not config.items[id] then return end -- Invalid item
+
+	if not config:hasAccess(id, ply) then return end
+
+	gConfig.GetHistory(addon, id, function(historyTbl)
+		if not IsValid(ply) then return end
+
+		net.Start("gConfigSendHistory")
+			net.WriteString(addon)
+			net.WriteString(id)
+			net.WriteUInt(#historyTbl, 8)
+			for i = 1, #historyTbl do
+				local row = historyTbl[i]
+
+				net.WriteUInt(row.date, 32)
+				net.WriteString(row.author)
+				net.WriteString(row.authorsid)
+				net.WriteString(row.comment)
+				net.WriteType(row.value)
+			end
+		net.Send(ply)
+	end)
 end)
