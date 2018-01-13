@@ -25,7 +25,7 @@ local function drawPanelBackground(w, h, clr)
 	derma.GetDefaultSkin().tex.Panels.Normal(0, 0, w, h, clr)
 end
 
-local function configEditClick(configItemList, config, configItemId)
+local function configEditClick(config, configItemId)
 	local item = config.items[configItemId]
 
 	-- Setup popup
@@ -139,8 +139,6 @@ local function selectConfig(configItemList, configName, config)
 		for k, tbl in pairs(items) do
 			if k == "__key" then continue end
 
-			local itemValue, isDefaultValue = config:getPreview(tbl.id)
-
 			local pnl = vgui.Create("DPanel")
 				pnl:Dock(TOP)
 				pnl:DockMargin(0, 2, 0, 2)
@@ -158,21 +156,13 @@ local function selectConfig(configItemList, configName, config)
 				itemDescription:SetPos(5, 5 + itemName:GetTall() + 1)
 
 			local itemValuePreview = vgui.Create("DLabel", pnl)
-				itemValuePreview:SetText(itemValue)
-				if isDefaultValue then
-					itemValuePreview:SetFont(fontConfigItem2i)
-					itemValuePreview:SetTextColor(Color(80, 80, 80))
-				else
-					itemValuePreview:SetFont(fontConfigItem2)
-					itemValuePreview:SetTextColor(Color(80, 150, 80))
-				end
-				itemValuePreview:SizeToContentsY()
 
 			local itemEdit = vgui.Create("DImageButton", pnl)
 				itemEdit:SetImage("icon16/pencil.png")
+				itemEdit:SetTooltip("Edit")
 				itemEdit:SetSize(16, 16)
 				itemEdit.DoClick = function()
-					configEditClick(configItemList, config, tbl.id)
+					configEditClick(config, tbl.id)
 				end
 
 			pnl.PerformLayout = function(_, w, h)
@@ -194,6 +184,34 @@ local function selectConfig(configItemList, configName, config)
 				itemEdit:CenterVertical()
 				itemEdit:AlignRight(5)
 			end
+
+			pnl.Think = function()
+				local lastData = pnl.lastData
+				local curData = config.data[tbl.id]
+				if curData != lastData then
+					pnl:UpdateValue()
+				end
+			end
+
+			pnl.UpdateValue = function()
+				pnl.lastData = config.data[tbl.id]
+
+				local itemValue, isDefaultValue = config:getPreview(tbl.id)
+
+				itemValuePreview:SetText(itemValue)
+				if isDefaultValue then
+					itemValuePreview:SetFont(fontConfigItem2i)
+					itemValuePreview:SetTextColor(Color(80, 80, 80))
+				else
+					itemValuePreview:SetFont(fontConfigItem2)
+					itemValuePreview:SetTextColor(Color(80, 150, 80))
+				end
+				itemValuePreview:SizeToContentsY()
+
+				pnl:InvalidateLayout()
+			end
+			pnl:UpdateValue()
+
 
 			pnl.itemValuePreview = itemValuePreview
 			listLayout:Add(pnl)
