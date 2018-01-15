@@ -52,7 +52,11 @@ function gConfig.sendFullUpdate(ply, sendShared, sendServer)
 			writeFullUpdateConfig(name, config, sendShared, sendServer, ply)
 		end
 		net.WriteBool(false) -- no more configs
-	net.Send(ply)
+	if ply then
+		net.Send(ply)
+	else
+		net.Broadcast()
+	end
 end
 
 function gConfig.sendFullUpdateConfig(ply, config, sendShared, sendServer)
@@ -61,7 +65,11 @@ function gConfig.sendFullUpdateConfig(ply, config, sendShared, sendServer)
 		writeFullUpdateConfig(config.name, config, sendShared, sendServer, ply)
 
 		net.WriteBool(false) -- no more configs
-	net.Send(ply)
+	if ply then
+		net.Send(ply)
+	else
+		net.Broadcast()
+	end
 end
 
 local function rateLimit(ply)
@@ -142,4 +150,8 @@ end)
 
 hook.Add("PlayerInitialSpawn", "gConfigSendVariables", function(ply)
 	gConfig.sendFullUpdate(ply, true, false)
+end)
+
+hook.Add("gConfigValuesLoaded", "gConfigSendVariables", function()
+	gConfig.sendFullUpdate(nil, true, false)
 end)

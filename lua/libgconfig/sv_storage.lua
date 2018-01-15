@@ -114,6 +114,8 @@ function gConfig.GetValues()
 
 			-- run monitors here???
 		end
+
+		hook.Run("gConfigValuesLoaded")
 	end)
 end
 
