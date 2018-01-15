@@ -353,6 +353,8 @@ local function createMenu()
 			btn.DoClick = function()
 				selectedPnl = pnl
 				selectConfig(configItemList, name, tbl)
+
+				gConfig.requestFullUpdate(tbl)
 			end
 
 		addonList:AddItem(btn)

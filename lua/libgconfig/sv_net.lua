@@ -4,6 +4,7 @@ util.AddNetworkString("gConfigSendFullUpdate")
 util.AddNetworkString("gConfigSendServerVariables")
 util.AddNetworkString("gConfigSendValue")
 util.AddNetworkString("gConfigRequestHistory")
+util.AddNetworkString("gConfigRequestFullUpdate")
 util.AddNetworkString("gConfigSendHistory")
 
 function gConfig.sendValue(addon, item, value, author, ply)
@@ -24,25 +25,30 @@ function gConfig.sendValue(addon, item, value, author, ply)
 	end
 end
 
-local function writeFullUpdateConfig(name, tbl, sendShared, sendServer)
+local function writeFullUpdateConfig(name, config, sendShared, sendServer, ply)
+	assert(not (sendServer and not ply), "ply must be specified if sendServer is true")
+
 	net.WriteString(name)
 
-	for id, item in pairs(tbl.items) do
-		if item.realm == gConfig.Server and not sendServer then continue end
+	for id, item in pairs(config.items) do
+		if item.realm == gConfig.Server then
+			if not sendServer then continue end
+			if not config:hasAccess(id, ply) then continue end -- could potentially be expensive af
+		end
 		if item.realm == gConfig.Shared and not sendShared then continue end
 
 		net.WriteBool(true) -- here comes item
 		net.WriteString(id)
-		net.WriteType(tbl.data[id])
+		net.WriteType(config.data[id])
 	end
 	net.WriteBool(false) -- no more items
 end
 
 function gConfig.sendFullUpdate(ply, sendShared, sendServer)
 	net.Start("gConfigSendFullUpdate")
-		for name, tbl in pairs(gConfig.getList()) do
+		for name, config in pairs(gConfig.getList()) do
 			net.WriteBool(true) -- here comes config
-			writeFullUpdateConfig(name, tbl, sendShared, sendServer)
+			writeFullUpdateConfig(name, config, sendShared, sendServer, ply)
 		end
 		net.WriteBool(false) -- no more configs
 	net.Send(ply)
@@ -51,7 +57,7 @@ end
 function gConfig.sendFullUpdateConfig(ply, config, sendShared, sendServer)
 	net.Start("gConfigSendFullUpdate")
 		net.WriteBool(true) -- here comes config
-		writeFullUpdateConfig(config.name, config, sendShared, sendServer)
+		writeFullUpdateConfig(config.name, config, sendShared, sendServer, ply)
 
 		net.WriteBool(false) -- no more configs
 	net.Send(ply)
@@ -119,4 +125,16 @@ net.Receive("gConfigRequestHistory", function(_, ply)
 			end
 		net.Send(ply)
 	end)
+end)
+
+net.Receive("gConfigRequestFullUpdate", function(_, ply)
+	if rateLimit(ply) then return end
+
+	local addon = net.ReadString()
+
+	if not gConfig.exists(addon) then return end -- Invalid config
+
+	local config = gConfig.get(addon)
+
+	gConfig.sendFullUpdateConfig(ply, config, false, true)
 end)

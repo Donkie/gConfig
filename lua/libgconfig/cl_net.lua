@@ -69,3 +69,9 @@ function gConfig.setValue(config, id, newValue, comment)
 		net.SendToServer()
 	end
 end
+
+function gConfig.requestFullUpdate(config)
+	net.Start("gConfigRequestFullUpdate")
+		net.WriteString(config.name)
+	net.SendToServer()
+end
