@@ -88,7 +88,7 @@ function gConfig.SaveValue(addon, item, value, ply, comment)
 	db:query([[
 		INSERT INTO `gconfig_data` (`addon`, `item`, `date`, `value`, `userNick`, `userSteam`, `comment`)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
-	]], {addon, item, os.time(), valueStr, nick, steamid, comment})
+	]], {addon, item, os.time(), valueStr, nick, steamid, comment}):done()
 end
 
 function gConfig.GetValues()

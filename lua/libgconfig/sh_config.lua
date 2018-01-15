@@ -128,9 +128,10 @@ function configmeta:monitor(id, onChange)
 end
 
 function configmeta:hasAccess(id, ply)
-	--if CLIENT then return true end -- remove?
-
 	local item = self.items[id]
+
+	if CLIENT and item.realm == gConfig.Client then return true end
+
 	local accessLevel = item.access
 
 	local defaultAccess = false
@@ -183,7 +184,11 @@ function configmeta:set(id, value, ply, comment)
 	end
 
 	-- Finish
-	gConfig.SaveValue(self.name, id, value, ply, comment)
+	if realm == gConfig.Client then
+		gConfig.SaveValue(self.name, id, value, comment)
+	else
+		gConfig.SaveValue(self.name, id, value, ply, comment)
+	end
 
 	self.data[id] = value
 

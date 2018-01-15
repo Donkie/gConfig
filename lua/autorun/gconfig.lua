@@ -1,5 +1,6 @@
 AddCSLuaFile()
 AddCSLuaFile("libgconfig/loader.lua")
+AddCSLuaFile("metso/metso.lua")
 
 gConfig = {}
 gConfig.colors = {

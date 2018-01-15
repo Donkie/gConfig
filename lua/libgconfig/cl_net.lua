@@ -59,7 +59,7 @@ function gConfig.setValue(config, id, newValue, comment)
 	local item = config.items[id]
 
 	if item.realm == gConfig.Client then
-		gConfig.SaveValue(config.name, id, newValue, comment or "")
+		config:set(id, newValue, LocalPlayer(), comment)
 	else
 		net.Start("gConfigSendValue")
 			net.WriteString(config.name)

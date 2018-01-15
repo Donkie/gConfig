@@ -113,3 +113,13 @@ Config:add({
 	category = "Test",
 	type = "String",
 })
+
+Config:add({
+	id = "clienttest",
+	realm = gConfig.Client,
+	access = gConfig.Admin,
+	name = "Client Variable Test",
+	description = "This tests client variables",
+	category = "Test",
+	type = "String",
+})
