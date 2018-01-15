@@ -89,6 +89,7 @@ local function configHistoryClick(config, configItemId)
 	if IsValid(currentHistoryFrame) then currentHistoryFrame:Remove() end
 
 	local item = config.items[configItemId]
+	local isClientItem = item.realm == gConfig.Client
 
 	local frame = vgui.Create("DFrame")
 		frame:SetSize(500, 300)
@@ -99,10 +100,16 @@ local function configHistoryClick(config, configItemId)
 
 	local listView = vgui.Create("DListView", frame)
 		listView:Dock(FILL)
+
+	if isClientItem then
+		listView:AddColumn("Date")
+		listView:AddColumn("Value")
+	else
 		listView:AddColumn("Date")
 		listView:AddColumn("Author")
 		listView:AddColumn("Value")
 		listView:AddColumn("Comment")
+	end
 
 	frame.listView = listView
 	frame.config = config.name
@@ -110,41 +117,24 @@ local function configHistoryClick(config, configItemId)
 
 	currentHistoryFrame = frame
 
-	net.Start("gConfigRequestHistory")
-		net.WriteString(config.name)
-		net.WriteString(configItemId)
-	net.SendToServer()
+	gConfig.requestHistory(config, configItemId, function(rows)
+		if not IsValid(currentHistoryFrame) then return end
+
+		currentHistoryFrame.listView:Clear()
+
+		for i = 1, #rows do
+			local row = rows[i]
+
+			local datestr = os.date("%c", row.date)
+
+			if isClientItem then
+				currentHistoryFrame.listView:AddLine(datestr, row.previewValue)
+			else
+				currentHistoryFrame.listView:AddLine(datestr, string.format("%s (%s)", row.author, row.authorsid), row.previewValue, row.comment)
+			end
+		end
+	end)
 end
-
-net.Receive("gConfigSendHistory", function()
-	if not IsValid(currentHistoryFrame) then return end
-
-	local addon = net.ReadString()
-	local configItemId = net.ReadString()
-
-	if currentHistoryFrame.config != addon or
-		currentHistoryFrame.configItemId != configItemId then return end
-
-	local config = gConfig.get(addon)
-	local item = config.items[configItemId]
-	local itemType = gConfig.Types[item.type]
-
-	currentHistoryFrame.listView:Clear()
-
-	for _ = 1, net.ReadUInt(8) do
-		local date = net.ReadUInt(32)
-		local author = net.ReadString()
-		local authorsid = net.ReadString()
-		local comment = net.ReadString()
-		local value = net.ReadType()
-
-		local datestr = os.date("%Y-%m-%d %H:%M:%S %z", date)
-		local datestr = os.date("%c", date)
-		local previewValue = itemType.preview(value, item.typeOptions)
-
-		currentHistoryFrame.listView:AddLine(datestr, string.format("%s (%s)", author, authorsid), previewValue, comment)
-	end
-end)
 
 local function selectConfig(configItemList, configName, config)
 	configItemList:Clear()

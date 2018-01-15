@@ -74,7 +74,7 @@ function gConfig.GetHistory(addon, item, callback)
 	local unserialize = gConfig.Types[itemType].unserialize
 
 	db:query([[
-		SELECT a.`date`, a.`value` a.`comment`
+		SELECT a.`date`, a.`value`, a.`comment`
 		FROM `gconfig_data` a
 		WHERE a.`addon` = ? AND a.`item` = ?
 		ORDER BY a.`date` DESC
