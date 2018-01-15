@@ -138,3 +138,7 @@ net.Receive("gConfigRequestFullUpdate", function(_, ply)
 
 	gConfig.sendFullUpdateConfig(ply, config, false, true)
 end)
+
+hook.Add("PlayerInitialSpawn", "gConfigSendVariables", function(ply)
+	gConfig.sendFullUpdate(ply, true, false)
+end)
