@@ -82,6 +82,17 @@ function gConfig.ellipsis(val, len)
 end
 
 --[[
+Appends "s" to plural values
+]]
+function gConfig.plural(str, quantity)
+	if quantity == 1 then
+		return str
+	else
+		return string.format("%ss", str)
+	end
+end
+
+--[[
 Player notifications
 ]]
 if SERVER then

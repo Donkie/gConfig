@@ -48,7 +48,10 @@ local function receiveFullUpdate(len)
 		end
 	end
 
-	gConfig.msgInfo("Received %i config items for %i addons in %s of data", itemCount, addonCount, string.NiceSize(math.Round(len / 8)))
+	gConfig.msgInfo("Received %i config %s for %i %s in %s of data",
+		itemCount, gConfig.plural("item", itemCount),
+		addonCount, gConfig.plural("addon", addonCount),
+		string.NiceSize(math.Round(len / 8)))
 end
 net.Receive("gConfigSendFullUpdate", receiveFullUpdate)
 
