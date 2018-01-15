@@ -10,7 +10,7 @@ A configuration library for Garry's Mod addons.
 * Allows addon creators to change/remove/add new configuration items without conflicts or loss of data.
 * It stores a full history of all configuration values, with who edited it, and possibility to revert to old values.
 
-**This is only a draft / idea so far and nothing of use has yet been made. This is intended to be a community effort since it's made for addon creators. Feel free to discuss ideas and create pull requests.**
+**This addon is in early development and does not work yet. This is intended to be a community effort since it's made for addon creators. Feel free to discuss ideas and create pull requests.**
 
 # For Server Owners
 Install this addon to your addons directory, then follow the instructions in `lua/gconfig.lua`
