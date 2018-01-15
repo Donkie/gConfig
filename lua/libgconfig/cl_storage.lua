@@ -4,7 +4,6 @@ gConfig.metso = include("metso/metso.lua")
 local db = gConfig.metso.create({
 	driver = "sqlite"
 })
-gConfig.msgInfo("Loaded database")
 
 local function initialize()
 	db:query([[

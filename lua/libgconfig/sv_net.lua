@@ -33,9 +33,10 @@ local function writeFullUpdateConfig(name, config, sendShared, sendServer, ply)
 	for id, item in pairs(config.items) do
 		if item.realm == gConfig.Server then
 			if not sendServer then continue end
-			if not config:hasAccess(id, ply) then continue end -- could potentially be expensive af
+			if not config:hasAccess(id, ply) then continue end -- Only send server variables to authorized players, could potentially be expensive af
 		end
 		if item.realm == gConfig.Shared and not sendShared then continue end
+		if item.realm == gConfig.Client then continue end
 
 		net.WriteBool(true) -- here comes item
 		net.WriteString(id)
