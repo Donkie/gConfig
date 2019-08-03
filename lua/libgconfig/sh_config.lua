@@ -242,6 +242,8 @@ end
 gConfig namespace
 ]]
 function gConfig.register(addonName)
+	assert(type(addonName) == "string", "addonName must be of type string")
+
 	-- Get the file path of the addon
 	local t = debug.getinfo(2)
 	local addonPath = t.source or "unknown"
@@ -273,6 +275,8 @@ function gConfig.register(addonName)
 end
 
 function gConfig.get(addonName)
+	assert(type(addonName) == "string", "addonName must be of type string")
+
 	if configs[addonName] then
 		return configs[addonName]
 	else

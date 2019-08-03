@@ -41,7 +41,7 @@ local function initialize()
 			`id` int NOT NULL AUTO_INCREMENT,
 			`addon` varchar(32) NOT NULL,
 			`item` varchar(16) NOT NULL,
-			`date` UNSIGNED int NOT NULL,
+			`date` int UNSIGNED NOT NULL,
 			`value` TEXT NOT NULL,
 			`userNick` varchar(32),
 			`userSteam` char(19),

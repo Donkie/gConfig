@@ -52,6 +52,8 @@ local function receiveFullUpdate(len)
 		itemCount, gConfig.plural("item", itemCount),
 		addonCount, gConfig.plural("addon", addonCount),
 		string.NiceSize(math.Round(len / 8)))
+
+	hook.Run("gConfigValuesLoaded")
 end
 net.Receive("gConfigSendFullUpdate", receiveFullUpdate)
 

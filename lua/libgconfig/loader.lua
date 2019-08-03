@@ -35,7 +35,17 @@ end
 gConfig.loadFolder("libgconfig")
 gConfig.loadFolder("gconfig", true)
 
-gConfig.filesLoaded = true
+local function loadGamemodeConfigs()
+	gConfig.loadFolder(GAMEMODE.FolderName .. "/gamemode/gconfig", true)
+
+	gConfig.filesLoaded = true
+end
+
+if GAMEMODE then
+	loadGamemodeConfigs()
+else -- Wait for gamemode to load
+	hook.Add("OnGamemodeLoaded", "gConfigWaitForGamemode", loadGamemodeConfigs)
+end
 
 hook.Add("Think", "gConfigWaitForLoad", function()
 	if gConfig.filesLoaded and gConfig.dbReady then
@@ -43,4 +53,3 @@ hook.Add("Think", "gConfigWaitForLoad", function()
 		hook.Remove("Think", "gConfigWaitForLoad")
 	end
 end)
-
